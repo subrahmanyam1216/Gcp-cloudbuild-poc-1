@@ -25,7 +25,7 @@ steps:
 substitutions:
     #GCP Specific configuration. Please DON'T change anything
     _PROJECT: cloud-build-poc-gke
-    _ZONE: asia-south1-a
+    _ZONE: us-central1-a
     _GKE_CLUSTER: gke-cluster-poc
     
     #Repository Specific configuration. DevOps can change this settings

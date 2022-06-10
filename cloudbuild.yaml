@@ -28,7 +28,7 @@ substitutions:
     #Repository Specific configuration. DevOps can change this settings
     _DEPLOYMENTNAME: hello-world-service
     _CONTAINERNAME: hello-world-service    
-    _REPO_NAME: gkecloudbuild
+    _REPO_NAME: Gcp-cloudbuild-poc-1
     
     # Developers ONLY change
     _VERSION: v1.0

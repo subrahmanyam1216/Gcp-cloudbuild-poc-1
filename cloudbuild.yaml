@@ -28,6 +28,7 @@ substitutions:
     _ZONE: us-central1-a
     _GKE_CLUSTER: gke-cluster-poc
     
+    
     #Repository Specific configuration. DevOps can change this settings
     _DEPLOYMENTNAME: hello-world-service
     _CONTAINERNAME: hello-world-service    

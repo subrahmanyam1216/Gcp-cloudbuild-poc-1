@@ -3,24 +3,44 @@ steps:
 # - name: 'gcr.io/cloud-builders/git'
  # args: ['clone','https://source.developers.google.com/p/${_PROJECT}/r/${_REPO_NAME}']
   
-#Build the image 
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build','-t','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}','.']
-
-#Push the image  
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}']
+#Build the image   
+  - name: 'gcr.io/cloud-builders/docker'
+  id: 'Build'
+  args: ["build", "-t", "$_IMAGE_NAME:$_IMAGE_VERSION", ".", "-f", "$_DOCKERFILE_PATH"]
   
-#Update the container image using kubectl set
-- name: 'gcr.io/cloud-builders/kubectl'
+  #push the image
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push'
+  args: ["push", "$_IMAGE_NAME:$_IMAGE_VERSION"]
+  
+  
+  #deply the application
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+  id: 'Prepare deploy'
   args:
-  - 'set'
-  - 'image'
-  - 'deployment/${_DEPLOYMENTNAME}'
-  - '${_CONTAINERNAME}=gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}'
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=${_ZONE}'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}'
+  - 'prepare'
+ # - '--filename=$_K8S_YAML_PATH'
+  - '--image=$_IMAGE_NAME:$_IMAGE_VERSION'
+  - '--app=$_K8S_APP_NAME'
+  - '--version=$_IMAGE_VERSION'
+  - '--namespace=$_K8S_NAMESPACE'
+  - '--output=output'
+  - '--annotation=gcb-build-id=$BUILD_ID'
+  
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  id: 'Apply deploy'
+  args:
+  - 'apply'
+ # - '--filename=$_OUTPUT_BUCKET_PATH/expanded/*'
+  - '--namespace=$_K8S_NAMESPACE'
+  - '--cluster=$_GKE_CLUSTER'
+  - '--location=$_GKE_LOCATION'
+images:
+- '$_IMAGE_NAME:$_IMAGE_VERSION'
+
+tags: [$_K8S_APP_NAME']
+
+
   
 substitutions:
     #GCP Specific configuration. Please DON'T change anything
@@ -29,13 +49,11 @@ substitutions:
     _GKE_CLUSTER: gke-cluster-poc
     
     
-    #Repository Specific configuration. DevOps can change this settings
-    - 'DEPLOYMENTNAME: ${_DEPLOYMENTNAME}'
-    - 'CONTAINERNAME:  ${_CONTAINERNAME}'
-    _REPO_NAME: Gcp-cloudbuild-poc-1
+    images:
+- '$_IMAGE_NAME:$_IMAGE_VERSION'
+
+tags: [$_K8S_APP_NAME']
     
-    # Developers ONLY change
-    _VERSION: v2.0
     
 options:
     substitution_option: 'ALLOW_LOOSE'

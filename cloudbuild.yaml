@@ -1,8 +1,8 @@
 steps:
 #First Clone from Google Cloud Source Repository  
-# - name: 'gcr.io/cloud-builders/git'
- # args: ['clone','https://source.developers.google.com/p/${_PROJECT}/r/${_REPO_NAME}']
-  
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone','https://source.developers.google.com/p/${_PROJECT}/r/${_REPO_NAME}']
+
 #Build the image 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build','-t','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}','.']
@@ -10,19 +10,6 @@ steps:
 #Push the image  
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}']
-  
-  #deploythe application
-  - name: 'gcr.io/cloud-builders/gke-deploy'
-   
-    args:
-    - 'apply'
-   # - '--filename=$_OUTPUT_BUCKET_PATH/expanded/*'
-    - '--namespace=$_K8S_NAMESPACE'
-    - '--cluster=$_GKE_CLUSTER'
-    - '--location=$_GKE_LOCATION'
-  images:
-  - '$_CONTAINERNAME:$_VERSION'
-  
   
 #Update the container image using kubectl set
 - name: 'gcr.io/cloud-builders/kubectl'
@@ -38,18 +25,17 @@ steps:
 substitutions:
     #GCP Specific configuration. Please DON'T change anything
     _PROJECT: cloud-build-poc-gke
-    _ZONE: us-central1-a
+    _ZONE: us-central1-a	
     _GKE_CLUSTER: gke-cluster-poc
     
-    
-   
+    #Repository Specific configuration. DevOps can change this settings
     _DEPLOYMENTNAME: hello-world-service
-    _CONTAINERNAME: hello-world-service
-        
-    _REPO_NAME: Gcp-cloudbuild-poc-1
+    _CONTAINERNAME: hello-world-service    
+    _REPO_NAME: cicd-service
     
-   
+    # Developers ONLY change
     _VERSION: v1.0
     
 options:
     substitution_option: 'ALLOW_LOOSE'
+

@@ -1,21 +1,21 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/version:latest', '-t', 'gcr.io/$PROJECT_ID/version:$versioncontainer', '-t', 'gcr.io/$PROJECT_ID/version:$BUILD_ID', '.']
-    id: 'build-image-version'
-    waitFor: ['-']  # The '-' indicates that this step begins immediately.
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/version:$versioncontainer']
-    id: 'push-image-to-container-registry'
-    waitFor: ['build-image-version']
-  - name: "gcr.io/cloud-builders/gke-deploy"
-    args:
-    - run
-    - --filename=./kubernetes-resource-file.yaml
-    - '--image'
-    - 'gcr.io/$PROJECT_ID/version:$versioncontainer'
-    - '--location'
-    - 'us-central1-a'
-    - '--cluster'
-    - 'gke-cluster-poc'  
-    waitFor: ['push-image-to-container-registry']
-    id: 'deploy-to-cloud-kubrnetes'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/version:latest', '-t', 'gcr.io/$PROJECT_ID/version:$ver', '-t', 'gcr.io/$PROJECT_ID/version:$BUILD_ID', '.']
+  id: 'build-image-version'
+  waitFor: ['-']  # The '-' indicates that this step begins immediately.
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/version:$ver']
+  id: 'push-image-to-container-registry'
+  waitFor: ['build-image-version']
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=./kubernetes-resource-file.yaml
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/version:$ver'
+  - '--location'
+  - 'us-central1-c'
+  - '--cluster'
+  - 'nginx-1'  
+  waitFor: ['push-image-to-container-registry']
+  id: 'deploy-to-cloud-kubrnetes'

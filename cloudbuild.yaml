@@ -22,10 +22,11 @@ steps:
  # - 'us-central1-a'
   #- '--cluster'
  # - 'nginx-1'  
-- --location=${_CLOUDSDK_COMPUTE_ZONE}
+  - --location=${_CLOUDSDK_COMPUTE_ZONE}
   - --cluster=${_CLOUDSDK_CONTAINER_CLUSTER}
     
+    
     # Developers ONLY change
-    _VERSION: v1.0
+    #_VERSION: v1.0
     
 

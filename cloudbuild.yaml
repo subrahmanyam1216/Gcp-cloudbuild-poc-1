@@ -14,8 +14,8 @@ steps:
   - '--image'
   - 'gcr.io/$PROJECT_ID/myapp:$COMMIT_SHA'
   - '--location'
-  - 'us-central1-c'
+  - 'us-central1-a'
   - '--cluster'
-  - 'nginx-1'  
+  - 'gke-cluster-poc'  
   waitFor: ['push-image-to-container-registry']
   id: 'deploy-to-cloud-kubrnetes'

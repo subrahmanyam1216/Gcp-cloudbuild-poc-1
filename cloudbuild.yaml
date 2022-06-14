@@ -7,7 +7,7 @@ steps:
     args: ['push', 'gcr.io/$PROJECT_ID/version:$versioncontainer']
     id: 'push-image-to-container-registry'
     waitFor: ['build-image-version']
- - name: "gcr.io/cloud-builders/gke-deploy"
+  - name: "gcr.io/cloud-builders/gke-deploy"
     args:
     - run
     - --filename=./kubernetes-resource-file.yaml

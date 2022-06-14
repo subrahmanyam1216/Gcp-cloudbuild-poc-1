@@ -1,18 +1,18 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/version:latest', '-t', 'gcr.io/$PROJECT_ID/version:$ver', '-t', 'gcr.io/$PROJECT_ID/version:$BUILD_ID', '.']
-  id: 'build-image-version'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/myapp:latest', '-t', 'gcr.io/$PROJECT_ID/myapp:$COMMIT_SHA', '-t', 'gcr.io/$PROJECT_ID/myapp:$BUILD_ID', '.']
+  id: 'build-image-myapp'
   waitFor: ['-']  # The '-' indicates that this step begins immediately.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/version:$ver']
+  args: ['push', 'gcr.io/$PROJECT_ID/myapp:$COMMIT_SHA']
   id: 'push-image-to-container-registry'
-  waitFor: ['build-image-version']
+  waitFor: ['build-image-myapp']
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
   - run
   - --filename=./kubernetes-resource-file.yaml
   - '--image'
-  - 'gcr.io/$PROJECT_ID/version:$ver'
+  - 'gcr.io/$PROJECT_ID/myapp:$COMMIT_SHA'
   - '--location'
   - 'us-central1-c'
   - '--cluster'

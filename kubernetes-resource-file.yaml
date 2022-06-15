@@ -1,5 +1,4 @@
-  ---
-  
+ ---
   apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -18,6 +17,7 @@
       spec:
         containers:
           - image: nginx
+          #- image: gcr.io/cloud-build-poc-gke/version:ca80f2812978
             name: version-deploy
             ports:
               - containerPort: 80

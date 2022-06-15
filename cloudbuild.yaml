@@ -23,12 +23,12 @@ steps:
       - KUBECONFIG=/workspace/.kube/config
       
 # deploy the Kubernetes by useing yaml files
-  - name: "gcr.io/cloud-builders/gke-deploy"
+  - name: gcr.io/cloud-builders/gke-deploy
     args:
-  - run
-  - --filename=./kubernetes-resource-file.yaml
-  - '--image'
-  - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
+    - run
+    - --filename=./kubernetes-resource-file.yaml
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
 
 substitutions:
   _CUSTOM_REGION: us-central1-a

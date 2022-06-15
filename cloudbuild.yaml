@@ -21,7 +21,15 @@ steps:
       - CLOUDSDK_COMPUTE_REGION=$_CUSTOM_REGION
       - CLOUDSDK_CONTAINER_CLUSTER=$_CUSTOM_CLUSTER
       - KUBECONFIG=/workspace/.kube/config
-
+      
+# deploy the Kubernetes by useing yaml files
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=./kubernetes-resource-file.yaml
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
+ 
   # Deploy with Helm
   - name: gcr.io/$PROJECT_ID/helm
     args:
@@ -37,7 +45,8 @@ steps:
       - KUBECONFIG=/workspace/.kube/config
       - TILLERLESS=false
       - TILLER_NAMESPACE=kube-system
-timeout: 1200s
+timeout: 1500s
+
 substitutions:
   _CUSTOM_REGION: us-central1-a
   _CUSTOM_CLUSTER: gke-cluster-poc

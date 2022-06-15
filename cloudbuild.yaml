@@ -29,23 +29,6 @@ steps:
   - --filename=./kubernetes-resource-file.yaml
   - '--image'
   - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
- 
-  # Deploy with Helm
-  # - name: gcr.io/$PROJECT_ID/helm
-  #  args:
-  #    - upgrade
-  #    - -i
-   #   - version
-   #   - ./kubernetes-resource-file.yaml
-   #   - --set
-   #   - image.repository=gcr.io/$PROJECT_ID/version,image.tag=$COMMIT_SHA
-   #   - -f
-   #   - ./kubernetes-resource-file/values.yaml
-   # env:
-   #   - KUBECONFIG=/workspace/.kube/config
-    #  - TILLERLESS=false
-    #  - TILLER_NAMESPACE=kube-system
-#timeout: 1500s
 
 substitutions:
   _CUSTOM_REGION: us-central1-a

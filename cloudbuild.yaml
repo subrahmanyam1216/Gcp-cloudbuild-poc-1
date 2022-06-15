@@ -12,8 +12,16 @@ steps:
     args:
       - push
       - gcr.io/$PROJECT_ID/version:$COMMIT_SHA
+ 
+# deploy the Kubernetes by useing yaml files
+  - name: gcr.io/cloud-builders/gke-deploy
+    args:
+    - run
+    - --filename=./kubernetes-resource-file.yaml
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
 
-  # Configure a kubectl workspace for this project
+    # Configure a kubectl workspace for this project
   - name: gcr.io/cloud-builders/kubectl
     args:
       - cluster-info
@@ -22,13 +30,6 @@ steps:
       - CLOUDSDK_CONTAINER_CLUSTER=$_CUSTOM_CLUSTER
       - KUBECONFIG=/workspace/.kube/config
       
-# deploy the Kubernetes by useing yaml files
-  - name: gcr.io/cloud-builders/gke-deploy
-    args:
-    - run
-    - --filename=./kubernetes-resource-file.yaml
-    - '--image'
-    - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
  # Developers ONLY change
     substitutions:
     _CUSTOM_REGION: us-central1-a

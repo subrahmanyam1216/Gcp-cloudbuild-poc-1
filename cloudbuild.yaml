@@ -29,7 +29,7 @@ steps:
     - --filename=./kubernetes-resource-file.yaml
     - '--image'
     - 'gcr.io/$PROJECT_ID/version:$COMMIT_SHA'
-
-substitutions:
-  _CUSTOM_REGION: us-central1-a
-  _CUSTOM_CLUSTER: gke-cluster-poc
+ # Developers ONLY change
+    substitutions:
+    _CUSTOM_REGION: us-central1-a
+    _CUSTOM_CLUSTER: gke-cluster-poc

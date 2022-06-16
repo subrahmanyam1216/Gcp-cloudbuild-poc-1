@@ -10,7 +10,7 @@ steps:
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
   - run
-  - --filename=./kebectl.yaml
+  - --filename=./kubernetes-resource-file.yaml
   - '--image'
   - 'gcr.io/$PROJECT_ID/myapp:$COMMIT_SHA'
   - '--location'

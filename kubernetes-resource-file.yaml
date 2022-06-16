@@ -1,41 +1,32 @@
  ---
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: green-deploy
-    labels:
-      app: frontend
-      color: green
-  spec:
-    replicas: 1
-    template:
-      metadata:
-        name: green-deploy
-        labels:
-          app: frontend
-          color: green
-      spec:
-        containers:
-          - image: nginx
-          #- image: gcr.io/cloud-build-poc-gke/version:ca80f2812978
-            name: version-deploy
-            ports:
-              - containerPort: 80
-    selector:
-      matchLabels:
-        app: frontend
-        color: green
-  
-  ---
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: version-service
-  spec:
-    selector:
-      app: frontend
-    ports:
-      - targetPort: 80
-        port: 80
-    type: LoadBalancer
-  
+apiVersion: v1
+kind: Service
+metadata:
+  name: "nginx-1"
+spec:
+  selector:
+    app: "nginx-1"
+  type: LoadBalancer
+  ports:
+   - containerPort: 80
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "nginx-1"
+  namespace: "default"
+  labels:
+    app: "nginx-1"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "nginx-1"
+  template:
+    metadata:
+      labels:
+        app: "nginx-1"
+    spec:
+      containers:
+      - name: "nginx-1"
+        image: "nginx:latest"
